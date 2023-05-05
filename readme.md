@@ -8,6 +8,8 @@
 
 **early realese**
 
+[![asciicast](https://asciinema.org/a/4b5GNCATiWKsDPdaki1WVk4Ex.svg)](https://asciinema.org/a/4b5GNCATiWKsDPdaki1WVk4Ex)
+
 ## The projet 
 
 This project aims to bring **Out-of-the-box support of ChatGPT plugins to more conversational LLMs**. (**tested working with Vicuna, StableVicuna and of course GPT-3.5, GPT-4 APis)
