@@ -58,25 +58,23 @@ def create_model_instructions(plugin_location):
     openapi_spec = yaml.safe_load(yaml_content)
     yaml_string = yaml.dump(openapi_spec, default_flow_style=False)
     instructions = f"""
-
-Instructions to interact with the plugin named {plugin_name}:
+Bellow the instructions to interact with the plugin named {plugin_name}:
 To interact with the plugin use the following information.
 Plugin description: {plugin_description}\n
 """+"""
-To use a plugin, you will construct the plugin function call to display using the plugin name and the operationId value and Request body parameters value available in the following specification."""+f"""
+To use this plugin follow the following instructions with the help of the specification: """+f"""
 ---begining of openapi specification for {plugin_name}--- 
 {yaml_string}
+---end of openapi specification
 """+"""
-Make sure to respect the plugin name, operationid and make sure to use a single well formated json object as the function parameter.
-the template of the  plugin function call is: {{{ pluginName.operationId({parameter}) }}}
-IMPORTANT: make sure to always enclose plugin function call with triple curly braces ({{{function}}}).
-This should be written on a single line. 
-Replace pluginName with the  name of the plugin, operationId with the right function name.
-You need to check throughfully the function and confirm the parameter is a valid JSON object
-Make sure the parameter for the function call is a valid JSON object with the required key-value pair(s). A JSON object should be enclosed in curly braces ({}), with keys and string values in double quotes (\"\"). 
+follow the following steps:
+    * Build first the json object to pass as parameter to the function. It MUST be a well-formated single JSON object with the required key-value pair(s) ex:pluginName.operationId({"key",value}). A well-formed JSON object should be enclosed in curly braces {}. (use double quotes for the keys)
+    * Build the function call of the form {{{ pluginName.operationId(<well-formed JSON object>)}}} where pluginName is the name of the plugin, operationId is the unique identifier of the operation, the parameter of function must be the JSON object constructed at the previous step.
+    * Enclose the plugin function call in triple curly braces {{{ function }}}
+    * Give the result to the user (print it) to invoke the plugin.
+    
 After receiving a response from the plugin, continue the conversation based on the content of the response.
-IMPORTANT: When using the plugin, don't explain what you are doing simply display the command and stop, continue after the plugin response.
-Understood. When using the plugin, I will simply display the command without explaining what I'm doing, and then continue the conversation after receiving the plugin response.
+When using the plugin, don't explain what you are doing simply display the command and stop, continue after the plugin response.
 """
     return instructions, plugin_info, yaml_content
 

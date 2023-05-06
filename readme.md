@@ -124,18 +124,20 @@ See [instruction/readme.md](instructions/readme.md) for details.
 - [x] Refining Vicuna model instruction
 - [ ] Explain plugin invocation flow and backend support
 - [ ] OAuth Authentication support
+- [ ] Bring other LLMs to the party
 - [ ] Improve error handling with user feedback
 - [ ] List of working plugins with associated known-to-work prompts
 - [ ] Improve documentation
 - [ ] Implement unit tests and automated testing for plugins
 - [ ] Keep watching for Vicuna Openchat API server streaming support
 - [ ] Clean up/simplify plugins OpenAPI YAML to remove unnecessary information/details (would save tokens and allow LLM to focus better)
+- [ ] Allow for model-specific generic plugins-handling instructions
 
 ## Vicuna / StableVicuna
 
 It's amazing to see that quantized 13B parameter models (running locally on a 24GB GPU!) are able (most of the time) to properly construct the commands to invoke the plugins. (Models are pretty slow using a P6000, so testing wasn't that extensive; send 4090s in this direction!)
 
-These models are stubborn, not always following instructions properly, but they'll manage!
+These models are stubborn, not always following instructions properly (and at the same time really sensitive to the them), but they'll manage!
 
 Hints & notes:
 * Loading one plugin at a time or changing temperature might help.
@@ -144,11 +146,10 @@ Hints & notes:
 ## Notes About OpenAI Plugins & Models
 
 The user experience is as good as the underlying model is!
-OpenAI's plugin philosophy seems to be all about that: "Spend time improving the models; don't waste time trying to tweak/tune the plugins! Leverage the power of LLMs" 
+OpenAI's plugins philosophy seems to be all about that: 
+"Spend time improving the models; don't waste time trying to tweak/tune the plugins! Leverage the power of LLMs" 
 
-In terms of plugin handling
-
-, GPT-4 is amazing, GPT-3.5 is just behind, and Vicuna-13B struggles a little more, but they all manage eventually :)
+In terms of plugin handling: GPT-4 is amazing, GPT-3.5 is just behind, and Vicuna-13B struggles a little more, but they all manage eventually :)
 
 * Plugin manifests and OpenAPI specifications are public.
 * Plugin invocation how-to and instructions to models about how to handle plugins are not.

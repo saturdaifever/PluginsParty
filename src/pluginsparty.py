@@ -28,7 +28,6 @@ def initialize_logger(log_level):
     logging.basicConfig(level=numeric_log_level, format=log_format)
     logger = logging.getLogger('pluginpartylogger')
 
-
 # Initialize the global variable chat_completion_args with default values
 chat_completion_args = {
     'model': "gpt-3.5-turbo-0301",
@@ -63,32 +62,34 @@ def get_instructions_for_plugins(plugins):
     return instructions
 
 
-import regex
-
-class InvalidCommandFormatError(Exception):
-    pass
 
 def extract_command(message):
     content = message.get("content")
+
+    triple_curly_pattern = r"(?s).*?(?:(?:```\s*))?\{\{\{(?P<content>.*?)\}\}\}(?:(?:\s*```))?.*"
+    simplified_pattern = r"(?P<namespace>[\w_]+)\s*\.\s*(?P<operationid>[\w_]+)\s*\(\s*(?P<args>.*?)\s*\)"
     
-    #to do simplify the generated regex !
+    regex_flags = re.IGNORECASE | re.DOTALL
 
-    pattern = r"(?:(?:```\s*))?{{{(?:\s*)(?P<namespace>[\w_]+)\s*\.\s*(?P<operationid>[\w_]+)\s*\(\s*(?P<args>.*?)\s*\)(?:\s*)}}}(?:(?:\s*```))?"
+    triple_curly_match = re.search(triple_curly_pattern, content, regex_flags)
 
-    # Use the re.IGNORECASE flag to make the pattern case-insensitive
-    match = re.search(pattern, content, re.IGNORECASE)
+    if triple_curly_match:
+        triple_curly_content = triple_curly_match.group("content")
+        match = re.search(simplified_pattern, triple_curly_content, regex_flags)
 
-    if match:
-        try:
-            plugin_name, operation_id, params = match.groups()
-            # Optionally, you can parse the 'params' string into a JSON object if needed
-            params = json.loads(params)
-            return (plugin_name, operation_id), params
-        except (ValueError, json.JSONDecodeError) as e:
-            error_msg = f"Error: Invalid command format: {plugin_name}, {operation_id}, {params}"
-            raise InvalidCommandFormatError(error_msg) from e
-        
+        if match:
+            namespace, operation_id, params = match.group("namespace"), match.group("operationid"), match.group("args")
+            try:
+                params = json.loads(params)
+            except (ValueError, json.JSONDecodeError) as e:
+                error_msg = f"Error: Invalid command format: The 'args' is not a valid JSON object. namespace: {namespace}, operation_id: {operation_id}, parameters: {params}."
+                raise InvalidCommandFormatError(error_msg) from e
+            return (namespace, operation_id), params
+        else:
+            error_msg = f"Error: Invalid command format: The command is not well formed. Expected a JSON object as the parameter."
+            raise InvalidCommandFormatError(error_msg)
     return None, None
+
 
 def invoke_plugin_stub(plugin_operation, parameters):
     plugin_name, operation_id = plugin_operation
@@ -386,7 +387,8 @@ def start_dialog(first_prompt = "", spin=True, cli_mode=False):
             except (Exception) as e:
                 if exception_count < max_exceptions:
                     logger.info(f"Plugin invocation failed: {str(e)}")
-                    messages.append({"role": "user", "content": f"<RESPONSE FROM plugin> {str(e)} </RESPONSE> analyse the error and try to correct the command. Make sure it respects the format and that the syntax is valid. (ex: matching opening and closing brackets and parenthesis are mandatory)"})
+                    errormessage = "Invalid Plugin function call. Check the parameter is a well-formed JSON Object."
+                    messages.append({"role": "user", "content": f"<RESPONSE FROM plugin> {errormessage} </RESPONSE> analyse the error and try to correct the command. Make sure it respects the format and that the syntax is valid. (ex: matching opening and closing brackets and parenthesis are mandatory)"})
                     print(f"{str(e)}")
                     logger.info(f"Sending plugin response (FAILURE) to model")
                     send_messages(messages,spin)
@@ -481,8 +483,6 @@ if __name__ == "__main__":
     parser.add_argument("--openai_api_key", default=os.environ.get("OPENAI_API_KEY"), required=not os.environ.get("OPENAI_API_KEY"), help="Specify the OpenAI API key.")
 
     args = parser.parse_args()
-
-
     main(args)
 
 
