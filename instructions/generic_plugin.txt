@@ -1,0 +1,17 @@
+Below the instructions to interact with the plugin named {plugin_name}:
+
+{plugin_name} description manifest: 
+{plugin_description}
+{plugin_name} openapi specificaition:
+{yaml_string}
+---end of OpenAPI specification
+
+To use the plugin, strictly follow the following steps:
+    * Build first the json object to pass as argument to the function. It MUST be a well-formated single JSON object with the required key-value pair(s) ex:pluginName.operationId({{"key",value}}). A well-formed JSON object should be enclosed in curly braces {{}}. (use double quotes for the keys)
+    * Build the function call of the form {{{{{{ pluginName.operationId(argument) }}}}}} where pluginName is the name of the plugin, operationId is the unique identifier of the operation, the parameter of function must be the JSON object constructed at the previous step.
+    * IMPORTANT: if the argument is not a well-formed JSON Object it will faile. Make sure it is.
+    * Enclose the plugin function call in triple curly braces {{{{{{ function }}}}}}
+    * Give the result to the user (print it) to invoke the plugin.
+    
+After receiving a response from the plugin, continue the conversation based on the content of the response.
+When using the plugin, don't explain what you are doing simply display the command and stop, continue after the plugin response.

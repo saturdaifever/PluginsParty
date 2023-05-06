@@ -15,7 +15,9 @@ import readline
 from halo import Halo
 import warnings
 import argparse
-from register_plugin import register_plugin, create_model_instructions, get_plugins_stubs
+
+from register_plugin import register_plugin
+
 
 logger = logging.getLogger('pluginspartylogger')
 
@@ -43,25 +45,22 @@ console = Console()
 plugin_instructions = {}
 spinner = Halo(text='', spinner='dot1')
 
-def get_instructions_for_plugin(plugin_url):
+def get_instructions_for_plugin(plugin_url, model_name):
     try:
-        name, stub = register_plugin(plugin_url)
+        name, stub, instructions_str = register_plugin(plugin_url, model_name)
         # Call create_model_instructions to get instructions for each plugin
-        instructions_str, _, _ = create_model_instructions(plugin_url)
         return {"role": instruction_role, "content": instructions_str}
     except Exception as e:
         print(f"Error processing plugin at {plugin_url}: {e}")
         return None
 
-def get_instructions_for_plugins(plugins):
+def get_instructions_for_plugins(plugins, model_name):
     instructions = []
     for plugin_url in plugins:
-        instruction = get_instructions_for_plugin(plugin_url)
+        instruction = get_instructions_for_plugin(plugin_url,model_name)
         if instruction is not None:
             instructions.append(instruction)
     return instructions
-
-
 
 def extract_command(message):
     content = message.get("content")
@@ -90,6 +89,9 @@ def extract_command(message):
             raise InvalidCommandFormatError(error_msg)
     return None, None
 
+class InvalidCommandFormatError(Exception):
+    def __init__(self, message):
+        super().__init__(message)
 
 def invoke_plugin_stub(plugin_operation, parameters):
     plugin_name, operation_id = plugin_operation
@@ -100,13 +102,13 @@ def invoke_plugin_stub(plugin_operation, parameters):
     # Get the stubs for the plugin from the dictionary
     stubs = plugins_stubs.get(plugin_name)
     if not stubs:
-        print(f"Error: Plugin '{plugin_name}' not found")
+        logger.info(f"Error: invoke_plug_stub Plugin '{plugin_name}' not found")
         return None
 
     # Find the operation in the stubs using the .get() method with a default value
     operation_stub = stubs.get('operations', {}).get(operation_id)
     if not operation_stub:
-        print(f"Error: Operation '{operation_id}' not found")
+        logger.info(f"Error: invoke_plug_stub  Operation '{operation_id}' not found")
         return None
 
     # Construct the URL for the API request
@@ -451,7 +453,7 @@ def main(args):
     # Call the get_instructions_for_plugins function and append each instruction to the messages list
     plugins = load_plugins()
     logger.debug(f"fetching instruction for :{plugins}")
-    plugin_instructions = get_instructions_for_plugins(plugins)
+    plugin_instructions = get_instructions_for_plugins(plugins, args.model)
     logger.debug(f"instructions :{plugin_instructions}")
     #for instruction in plugin_instructions:
     messages.extend(plugin_instructions)

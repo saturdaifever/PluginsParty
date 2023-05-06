@@ -37,11 +37,11 @@ def fetch_and_save_yaml(api_url, plugin_dir):
     with open(yaml_file, "w") as f:
         f.write(response.text)
 
-def create_model_instructions(plugin_location):
+def create_model_instructions(plugin_location, model_name):
     plugin_info = fetch_plugin_info(plugin_location)
     api_url = plugin_info.get("api", {}).get("url")
     if not api_url:
-        print("API URL is missing or invalid")
+        logger.debug("API URL is missing or invalid")
         sys.exit(1)
     
     # If the api_url is relative, use urljoin to complement the missing information
@@ -50,33 +50,36 @@ def create_model_instructions(plugin_location):
     
     yaml_response = requests.get(api_url)
     if yaml_response.status_code != 200:
-        print(f"Error fetching YAML file: {yaml_response.status_code}")
+        logger.debug(f"Error fetching YAML file: {yaml_response.status_code}")
         sys.exit(1)
     yaml_content = yaml_response.text
     plugin_name = plugin_info.get("name_for_model", "unknown")
     plugin_description = plugin_info.get("description_for_model", "unknown")
     openapi_spec = yaml.safe_load(yaml_content)
     yaml_string = yaml.dump(openapi_spec, default_flow_style=False)
-    instructions = f"""
-Bellow the instructions to interact with the plugin named {plugin_name}:
-To interact with the plugin use the following information.
-Plugin description: {plugin_description}\n
-"""+"""
-To use this plugin follow the following instructions with the help of the specification: """+f"""
----begining of openapi specification for {plugin_name}--- 
-{yaml_string}
----end of openapi specification
-"""+"""
-follow the following steps:
-    * Build first the json object to pass as parameter to the function. It MUST be a well-formated single JSON object with the required key-value pair(s) ex:pluginName.operationId({"key",value}). A well-formed JSON object should be enclosed in curly braces {}. (use double quotes for the keys)
-    * Build the function call of the form {{{ pluginName.operationId(<well-formed JSON object>)}}} where pluginName is the name of the plugin, operationId is the unique identifier of the operation, the parameter of function must be the JSON object constructed at the previous step.
-    * Enclose the plugin function call in triple curly braces {{{ function }}}
-    * Give the result to the user (print it) to invoke the plugin.
     
-After receiving a response from the plugin, continue the conversation based on the content of the response.
-When using the plugin, don't explain what you are doing simply display the command and stop, continue after the plugin response.
-"""
+    # Try to load instructions from the model-specific file
+    instructions_file = f"instructions/{model_name}_plugin.txt"
+    if not os.path.exists(instructions_file):
+        # If the model-specific file is not found, use the generic file
+        instructions_file = "instructions/generic_plugin.txt"
+
+    # Log the name of the file being loaded
+    logger.info(f"Loading instructions template from file: {instructions_file}")
+
+    # Load instructions from the selected text file
+    with open(instructions_file, "r") as file:
+        instructions_template = file.read()
+    
+    # Format the instructions using the context of the associated variables
+    instructions = instructions_template.format(
+        plugin_name=plugin_name,
+        plugin_description=plugin_description,
+        yaml_string=yaml_string
+    )
+    
     return instructions, plugin_info, yaml_content
+
 
 def create_request_stubs(service_name, yaml_content, api_url):
     openapi_spec = yaml.safe_load(yaml_content)
@@ -121,10 +124,10 @@ def save_bearer_token(plugin_info, plugin_dir):
             f.write(token)
         logger.info("Bearer token saved successfully.")
 
-def register_plugin(plugin_url):
+def register_plugin(plugin_url, model_name):
     if re.match(r"^https?://[^/]+$", plugin_url):
         plugin_location = f"{plugin_url}/.well-known/ai-plugin.json"
-    instructions, plugin_info, yaml_content = create_model_instructions(plugin_url)
+    instructions, plugin_info, yaml_content = create_model_instructions(plugin_url, model_name)
     plugin_name = plugin_info.get("name_for_model")
 
     if not plugin_name:
@@ -159,4 +162,4 @@ def register_plugin(plugin_url):
     logger.debug(f" Plugin stubs:{plugin_stubs}")
     
     # Return the created stubs
-    return plugin_name, stub
+    return plugin_name, stub, instructions
