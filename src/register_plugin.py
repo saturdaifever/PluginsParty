@@ -68,12 +68,12 @@ To use a plugin, you will construct the plugin function call to display using th
 {yaml_string}
 """+"""
 Make sure to respect the plugin name, operationid and make sure to use a single well formated json object as the function parameter.
-the template of the  plugin function call is: {{{ pluginName.operationId({json_object}) }}}
-IMPORTANT: make sure to always enclose plugin function call with triple curly braces.
+the template of the  plugin function call is: {{{ pluginName.operationId({parameter}) }}}
+IMPORTANT: make sure to always enclose plugin function call with triple curly braces ({{{function}}}).
 This should be written on a single line. 
 Replace pluginName with the  name of the plugin, operationId with the right function name.
-IMPORTANT: The function parameter is a SINGLE VALID JSON object (ex : {"akey":"avalue"}) containing the required parameters.
 You need to check throughfully the function and confirm the parameter is a valid JSON object
+Make sure the parameter for the function call is a valid JSON object with the required key-value pair(s). A JSON object should be enclosed in curly braces ({}), with keys and string values in double quotes (\"\"). 
 After receiving a response from the plugin, continue the conversation based on the content of the response.
 IMPORTANT: When using the plugin, don't explain what you are doing simply display the command and stop, continue after the plugin response.
 Understood. When using the plugin, I will simply display the command without explaining what I'm doing, and then continue the conversation after receiving the plugin response.

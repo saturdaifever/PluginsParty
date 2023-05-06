@@ -1,1 +1,5 @@
-["https://websearch.plugsugar.com/.well-known/ai-plugin.json","https://gptweather.skirano.repl.co/.well-known/ai-plugin.json"]
+[
+"https://gptweather.skirano.repl.co/.well-known/ai-plugin.json",
+"https://websearch.plugsugar.com/.well-known/ai-plugin.json"
+]
+
