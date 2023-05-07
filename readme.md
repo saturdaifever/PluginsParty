@@ -10,7 +10,8 @@
 
 [![asciicast](https://asciinema.org/a/4b5GNCATiWKsDPdaki1WVk4Ex.svg)](https://asciinema.org/a/4b5GNCATiWKsDPdaki1WVk4Ex)
 [![Video Title](thumbnail_image.png)](assets/gpt3-ex1.mp4)
-
+![](assets/gpt3-ex1.gif)
+![](assets/gpt4-ex1.gif)
 ## The Goal
 
 This project aims to provide **out-of-the-box support for ChatGPT plugins with other conversational LLMs**. It has been **tested to work with Vicuna, StableVicuna, GPT-3.5, and GPT-4 APIs**.
