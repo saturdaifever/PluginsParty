@@ -8,9 +8,6 @@
 
 **Alpha Release**
 
-![](assets/gpt3-ex1.gif)
-## GPT3-turb
-![](assets/gpt4-ex1.gif)
 ## The Goal
 
 This project aims to provide **out-of-the-box support for ChatGPT plugins with other conversational LLMs**. It has been **tested to work with Vicuna, StableVicuna, GPT-3.5, and GPT-4 APIs**.
@@ -22,6 +19,12 @@ The client is built to allow LLMs to invoke external plugins, extending LLM capa
 As of today, all models are accessed via the OpenAI client Python API.
 
 This project was created to be a **multi-LLM plugin playground** and may also be valuable for **plugin testing automation**.
+
+## GPT4 plugin enabled
+![](assets/gpt4-ex1.gif)
+
+## GPT3.5-turbo plugin enabled
+![](assets/gpt3-ex1.gif)
 
 ## Features
 
