@@ -1,4 +1,4 @@
-Below are the instructions to interact with the plugin named {plugin_name}:
+Below are the instructions for an LLM to interact with the plugin named {plugin_name}:
 
 {plugin_name} description manifest:
 {plugin_description}
@@ -17,5 +17,4 @@ Make sure the argument is a always  well-formed JSON object. If it is not, the f
 Enclose the entire plugin function call in triple curly braces {{{{{{}}}}}}
 Provide the result to the user (print it) to invoke the plugin.
 After receiving a response from the plugin, continue the conversation based on the content of the response. When using the plugin, do not explain what you are doing—simply display the command and stop. Continue after the plugin response.
-Always ensure that the output follows the format provided in the example above, and that the argument is a well-formed JSON object with the required key-value pair(s) as specified in the plugin's OpenAPI specification. The argument must not be a string or any other data type other than a JSON object.
 When using the plugin, don't explain what you are doing simply display the command and stop, continue after the plugin response.
