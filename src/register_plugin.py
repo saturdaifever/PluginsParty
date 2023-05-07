@@ -65,7 +65,7 @@ def create_model_instructions(plugin_location, model_name):
         instructions_file = "instructions/generic_plugin.txt"
 
     # Log the name of the file being loaded
-    logger.debug(f"Loading instructions template from file: {instructions_file}")
+    logger.info(f"Loading instructions template from file: {instructions_file}")
 
     # Load instructions from the selected text file
     with open(instructions_file, "r") as file:

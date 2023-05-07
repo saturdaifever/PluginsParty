@@ -99,14 +99,17 @@ Example usage with command-line arguments:
 python src/pluginsparty.py --model gpt-4 --temperature 0.8 --instruction-role user --cli
 ```
 
-## Internal Commands
-In addition to interacting with language models and plugins, the program provides internal commands that users can use to perform specific actions. These commands are:
+## Internal commands
 
-This is a command /m that displays the entire message history, including both user input and assistant responses.
+ In addition to interacting with language models and plugins, the AI pluginsparty project provides internal commands
 
-2. `/!`: Execute last code block. Prompt user for confirmation before executing. If confirmation is provided, system executes code block as system command and displays output. Useful for running code snippets provided by assistant
+ 1. `/m`: The `/m` command allows users to view the list of messages exchanged between the user and the model. 
 
-The /register command registers a new plugin with the program. It takes the form /register <plugin_url>. Once entered, the program will retrieve the plugin's manifest, instructions, and operations from the specified URL and register it for use.
+ 2. `/!`: Execute last code block. Prompt user for confirmation before executing. If confirmation is provided, system executes code block as system command and displays output. Useful for running code snippets provided by assistant. 
+
+ 3. `/register`: The `/register` command allows users to register a new plugin while conversing. The format of the command is `/register <plugin_url>`. When this command is entered, the pluginsparty will fetch the plugin's manifest, instructions, and operations from the provided URL and register the plugin for use. 
+
+ These internal commands enhance the user experience by providing quick access to useful features and actions within the pluginsparty.
 
 ## Directory Structure
 

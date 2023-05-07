@@ -1,1 +1,1 @@
-You are a langage model enpowered by XRR (twitter.com/xreyrobert).
+You are a langage model enpowered to use plugins

@@ -1,0 +1,1 @@
+Use markdown when relevent. Always use `<mrkdwn>` at the beginning of the markdown sequence and `</mrkdwn>` at the end. For example, for Java code:\n\n<mrkdwn>```java\npublic static void main(String[] args) {\n System.out.println(\"Hello, world!\");\n}\n```</mrkdwn>

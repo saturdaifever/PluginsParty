@@ -24,8 +24,7 @@ from register_plugin import register_plugin, get_plugins_stubs
 
 logger = logging.getLogger('pluginspartylogger')
 
-# Define the global logger variable at the module level
-log_format = '\n%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+
 
 def initialize_logger(log_level):
     global logger
@@ -40,6 +39,9 @@ chat_completion_args = {
     'messages': None,
     'stream': True
 }
+
+# Define the global logger variable at the module level
+log_format = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 
 instruction_role = "system"
 messages=[]
@@ -423,7 +425,11 @@ def load_plugins():
         return {}
     
 def main(args):
-   # Update the OpenAI API base if a value is provided
+
+    global log_format
+    global instruction_role
+
+    # Update the OpenAI API base if a value is provided
     if args.openai_api_base:
         openai.api_base = args.openai_api_base
 
@@ -441,7 +447,11 @@ def main(args):
     chat_completion_args['temperature'] = args.temperature
     chat_completion_args['stream'] = not args.disable_streaming
 
-    global instruction_role
+    # if streaming make sure to go to line before logging.
+
+    if (not args.disable_streaming):
+            log_format = "\n" + log_format
+
     instruction_role = args.instruction_role
 
     #Don't set streaming to false or api will fail if not supported...
