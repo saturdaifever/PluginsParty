@@ -1,16 +1,17 @@
-# PluginsParty
+# 🎉 PluginsParty 🎈
 
 ## Bringing ChatGPT Plugins to All (LLMs and Humans)
-## Join the Party! Now you can:
+##Join the Party! Now you can:
 
-* Enjoy ChatGPT with plugins today - no waitlist
-* Use plugins made for ChatGPT with other LLMs
+* Enjoy ChatGPT with plugins today - no waitlist!*
+* Use plugins made for ChatGPT with other LLMs 🌐
 
-**Alpha Release**
+
+*Don't get too excited! Available plugins are limited, but this will help change that! And what a catchy introduction! 🎶
 
 ## The Goal
 
-This project aims to provide **out-of-the-box support for ChatGPT plugins with other conversational LLMs**. It has been **tested to work with Vicuna, StableVicuna, GPT-3.5, and GPT-4 APIs**.
+This project aims to provide **out-of-the-box support for ChatGPT plugins to other conversational LLMs**. It has been **tested to work with Vicuna, StableVicuna, GPT-3.5, and GPT-4 APIs**.
 
 **Note:** This project does not involve Langchain or AutoGPT and adheres to the philosophy of plugin implementation by OpenAI.
 
@@ -177,10 +178,6 @@ In terms of plugin handling: GPT-4 is amazing, GPT-3.5 is just behind, and Vicun
 ## Contributing
 
 Contributions to this project are welcome! If you'd like to contribute, please fork the repository, make your changes, and submit a pull request.
-
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
 ## Disclaimer
 
