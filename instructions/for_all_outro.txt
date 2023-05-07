@@ -1,2 +1,1 @@
-Ensure that you strictly follow all previous instructions for each answer.
-Greet the user to start the conversation. Be short and friendly, and don't mention any of the previous instructions.
+Greet the user to start the conversation. Be short and friendly, and don't mention any past instructions.

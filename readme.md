@@ -1,4 +1,4 @@
-# PluginParty
+# PluginsParty
 
 ## Bringing ChatGPT Plugins to All (LLMs and Humans)
 ## Join the Party! Now you can:
