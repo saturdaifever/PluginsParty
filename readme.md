@@ -9,6 +9,7 @@
 **Alpha Release**
 
 ![](assets/gpt3-ex1.gif)
+## GPT3-turb
 ![](assets/gpt4-ex1.gif)
 ## The Goal
 
