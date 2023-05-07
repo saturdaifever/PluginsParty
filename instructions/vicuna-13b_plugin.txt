@@ -6,15 +6,14 @@ Below are the instructions for an LLM to interact with the plugin named {plugin_
 {yaml_string}
 ---end of OpenAPI specification
 
-To use the plugin, strictly follow the steps below:
-
-Construct the JSON object to pass as an argument to the function. The JSON object MUST be a well-formatted single JSON object with the required key-value pair(s). The format should be as follows: {{"key": "value"}}. Make sure to use double quotes for the keys and enclose the entire JSON object in curly braces {{}}.
-Build the function call using the following format: {{{{{{ pluginName.operationId({{"key": "value"}}) }}}}}} where. In this format:
+Construct the JSON object to pass as an argument to the function.
+The JSON object MUST be a well-formatted single JSON object with the required key-value pair(s).
+The format should be as follows: {{"key": "value"}}. Make sure to use double quotes for the keys and enclose the entire JSON object in curly braces {{}}.
+Build the function call using the following format: pluginName.operationId({{"key": "value"}})  where:
 pluginName is the name of the plugin.
-operationId is the unique identifier of the operation.
-argument is the JSON object constructed in step 1.  (hint: it can't be a string!)
+operationId is the unique identifier of the operation matching the plugin OpenAPI specification.
+function argument is the JSON object constructed in step 1.  (hint: it can't be a string!)
 Make sure the argument is a always  well-formed JSON object. If it is not, the function call will fail.
-Enclose the entire plugin function call in triple curly braces {{{{{{}}}}}}
-Provide the result to the user (print it) to invoke the plugin.
-After receiving a response from the plugin, continue the conversation based on the content of the response. When using the plugin, do not explain what you are doing—simply display the command and stop. Continue after the plugin response.
+Print the plugin function call in triple curly braces and stop.
+After receiving a response from the plugin, continue the conversation based on the content of the response. When using the plugin, do not explain what you are doing—simply display the command and stop.
 When using the plugin, don't explain what you are doing simply display the command and stop, continue after the plugin response.

@@ -4,6 +4,8 @@ import openai
 from rich import print as rich_print
 from rich.markdown import Markdown
 from rich.console import Console
+from rich.live import Live
+
 import re
 import subprocess
 import register_plugin 
@@ -16,13 +18,14 @@ from halo import Halo
 import warnings
 import argparse
 
-from register_plugin import register_plugin, get_plugins_stubs
+import time
 
+from register_plugin import register_plugin, get_plugins_stubs
 
 logger = logging.getLogger('pluginspartylogger')
 
 # Define the global logger variable at the module level
-log_format = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+log_format = '\n%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 
 def initialize_logger(log_level):
     global logger
@@ -93,6 +96,8 @@ class InvalidCommandFormatError(Exception):
     def __init__(self, message):
         super().__init__(message)
 
+
+
 def invoke_plugin_stub(plugin_operation, parameters):
     plugin_name, operation_id = plugin_operation
 
@@ -104,7 +109,7 @@ def invoke_plugin_stub(plugin_operation, parameters):
     if not stubs:
         logger.info(f"Error: invoke_plug_stub Plugin '{plugin_name}' not found")
         return None
-
+    
     # Find the operation in the stubs using the .get() method with a default value
     operation_stub = stubs.get('operations', {}).get(operation_id)
     if not operation_stub:
@@ -135,12 +140,11 @@ def invoke_plugin_stub(plugin_operation, parameters):
     logger.debug(f"{url}")
     logger.debug(f"{headers}")
     logger.debug(f"{parameters}")
-
+   
     response = requests.request(method, url, json=parameters, headers=headers)
- 
+
     # Check if the response is successful
     if response.ok:
-        # Check if the response body is empty
         if response.text.strip():
             return response.text
         else:
@@ -154,7 +158,6 @@ def invoke_plugin_stub(plugin_operation, parameters):
         """
         print(errormsg)
         return errormsg
-
 
 def is_markdown(text):
     markdown_patterns = [
@@ -292,7 +295,7 @@ def get_user_input(prompt):
         print(f"An error occurred: {e}")
         return None
 
-def start_dialog(first_prompt = "", spin=True, cli_mode=False):
+def start_dialog(first_prompt = "", spin=True, cli_mode=False, print_raw_plugins_output=False):
 
     while True:
         if (spin and not chat_completion_args['stream']): spinner.stop()
@@ -381,9 +384,12 @@ def start_dialog(first_prompt = "", spin=True, cli_mode=False):
                 if plugin_operation:
                     logger.info(f"Invoking plugin operation {plugin_operation}")
                     response = invoke_plugin_stub(plugin_operation, params)  # Update the function call
-                    console.print("```\n"+response+"\n```")
-                    messages.append({"role": "user", "content": f"<RESPONSE FROM {plugin_operation}> {response} </RESPONSE> Answer my initial question given the plugin response. You can use the results to initiate another plugin call if needed."})
-                    logger.info(f"Sending plugin response (SUCCESS) to model")
+                    if print_raw_plugins_output:
+                        print("```\n"+response+"\n```")
+                    message={"role": "user", "content": f"<RESPONSE FROM {plugin_operation}> {response} </RESPONSE> Answer my initial question given the plugin response. You can use the results to initiate another plugin call if needed."}
+                    messages.append(message)
+                    logger.debug(f"response")
+                    logger.debug(f"Sending plugin response (SUCCESS) to model")
                     send_messages(messages,spin)
                 retry=False
             except (Exception) as e:
@@ -392,7 +398,7 @@ def start_dialog(first_prompt = "", spin=True, cli_mode=False):
                     errormessage = "Invalid Plugin function call. Check the parameter is a well-formed JSON Object."
                     messages.append({"role": "user", "content": f"<RESPONSE FROM plugin> {errormessage} </RESPONSE> analyse the error and try to correct the command. Make sure it respects the format and that the syntax is valid. (ex: matching opening and closing brackets and parenthesis are mandatory)"})
                     print(f"{str(e)}")
-                    logger.info(f"Sending plugin response (FAILURE) to model")
+                    logger.debug(f"Sending plugin response (FAILURE) to model")
                     send_messages(messages,spin)
                     exception_count += 1
                 else:
@@ -472,6 +478,8 @@ if __name__ == "__main__":
     parser.add_argument("--temperature", type=float, default=0.7, help="Specify the temperature.")
     parser.add_argument("--disable-spinner", action="store_true", default=False, help="Disable spinner.")
     parser.add_argument("--hide-raw-plugin-reponse", action="store_true", default=False, help="Hide plugin raw reponse.")
+    
+    parser.add_argument("--print-raw-plugins-output", action="store_true", default=False, help="Print raw plugins response to console.")
 
     parser.add_argument("--prompt", default="", type=str, help="Send a prompt") 
     parser.add_argument("--cli", action="store_true", default=False, help="Enable CLI mode (exit after first answer).")  # New argument
