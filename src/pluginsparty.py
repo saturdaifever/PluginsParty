@@ -16,7 +16,7 @@ from halo import Halo
 import warnings
 import argparse
 
-from register_plugin import register_plugin
+from register_plugin import register_plugin, get_plugins_stubs
 
 
 logger = logging.getLogger('pluginspartylogger')
