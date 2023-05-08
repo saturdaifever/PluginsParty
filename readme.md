@@ -22,7 +22,7 @@ As of today, all models are accessed via the OpenAI client Python API.
 This project was created to be a **multi-LLM plugin playground** and may also be valuable for **plugin testing automation**.
 
 ## Vicuna 13b - running locally on a 24GB GPU 
-![](assets/vicuna13b.gif)
+![](assets/vicuna13b-ex1.gif)
 
 ## GPT4 plugin enabled
 ![](assets/gpt4-ex1.gif)
