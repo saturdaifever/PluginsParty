@@ -3,9 +3,8 @@
 ## Bringing ChatGPT Plugins to All (LLMs and Humans)
 ## Join the Party! Now you can:
 
-* Enjoy ChatGPT with plugins today - no waitlist!*
 * Use plugins made for ChatGPT with other LLMs 🌐
-
+* Enjoy ChatGPT with plugins today - no waitlist!*
 
 *Don't get too excited! Available plugins are limited, but it wont last and what a catchy intro! 🎶
 
