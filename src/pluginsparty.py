@@ -9,7 +9,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 #!/usr/bin/env python3
 
 import openai
@@ -35,8 +34,6 @@ import time
 from register_plugin import register_plugin, get_plugins_stubs
 
 logger = logging.getLogger('pluginspartylogger')
-
-
 
 def initialize_logger(log_level):
     global logger
@@ -83,15 +80,22 @@ def extract_command(message):
     content = message.get("content")
 
     triple_curly_pattern = r"(?s).*?(?:(?:```\s*))?\{\{\{(?P<content>.*?)\}\}\}(?:(?:\s*```))?.*"
+    triple_brackets = r"(?s).*?(?:(?:```\s*))?\[\[\[(?P<content>.*?)\}\}\}(?:(?:\s*```))?.*"
     simplified_pattern = r"(?P<namespace>[\w_]+)\s*\.\s*(?P<operationid>[\w_]+)\s*\(\s*(?P<args>.*?)\s*\)"
-    
+    triple_square_pattern = r"(?s).*?(?:(?:```\s*))?\[\[\[(?P<content>.*?)\]\]\](?:(?:\s*```))?.*"
+
     regex_flags = re.IGNORECASE | re.DOTALL
 
     triple_curly_match = re.search(triple_curly_pattern, content, regex_flags)
+    pluginsparty_pattern_match = re.search(triple_square_pattern, content, regex_flags)
 
-    if triple_curly_match:
-        triple_curly_content = triple_curly_match.group("content")
-        match = re.search(simplified_pattern, triple_curly_content, regex_flags)
+    if triple_curly_match or pluginsparty_pattern_match:
+        if triple_curly_match:
+            group_content = triple_curly_match.group("content")
+        if pluginsparty_pattern_match:
+            group_content = pluginsparty_pattern_match.group("content")
+
+        match = re.search(simplified_pattern, group_content, regex_flags)
 
         if match:
             namespace, operation_id, params = match.group("namespace"), match.group("operationid"), match.group("args")
@@ -269,7 +273,7 @@ def read_instructions(model_name):
         logger.debug(f"No specific model instructions text file found for {model_name}. Using default.")
         instructions_path = default_instructions_path
     else:
-        logger.debug(f"Specific model instructions text file found for {model_name}.")
+        logger.debug(f"Loding instructions for {model_name}.")
 
     instructions = []
     with open(instructions_path, 'r') as file:
@@ -309,10 +313,16 @@ def get_user_input(prompt):
         print(f"An error occurred: {e}")
         return None
 
-def start_dialog(first_prompt = "", spin=True, cli_mode=False, print_raw_plugins_output=False):
+def start_dialog(args):
+
+    cli_mode=args.cli
+    print_raw_plugins_output=args.print_raw_plugins_output
+    spin=not args.disable_spinner
+    first_prompt=args.prompt
+    streaming=not args.disable_streaming
 
     while True:
-        if (spin and not chat_completion_args['stream']): spinner.stop()
+        if (spin and not streaming): spinner.stop()
         if (first_prompt == ""):
             user_input = get_user_input("\n]")
         else:
@@ -320,7 +330,7 @@ def start_dialog(first_prompt = "", spin=True, cli_mode=False, print_raw_plugins
             print ("]"+user_input)
             first_prompt=""
 
-        if (spin and not chat_completion_args['stream'] ): spinner.start()
+        if (spin and not streaming): spinner.start()
         
         if user_input.lower() == "exit":
             break
@@ -395,7 +405,7 @@ def start_dialog(first_prompt = "", spin=True, cli_mode=False, print_raw_plugins
         while(retry):
             try:
                 plugin_operation, params = extract_command(messages[-1])
-                if plugin_operation:
+                if plugin_operation and not args.disable_plugin_invocation:
                     logger.info(f"Invoking plugin operation {plugin_operation}")
                     response = invoke_plugin_stub(plugin_operation, params)  # Update the function call
                     if print_raw_plugins_output:
@@ -416,7 +426,7 @@ def start_dialog(first_prompt = "", spin=True, cli_mode=False, print_raw_plugins
                     send_messages(messages,spin)
                     exception_count += 1
                 else:
-                    logger.info(f("\nReached maximum number of allowed exceptions - aborting"))
+                    logger.info(f"Reached maximum number of allowed exceptions - aborting")
                     retry=False
         if (cli_mode): return
 
@@ -435,7 +445,24 @@ def load_plugins():
     except json.JSONDecodeError:
         print(f"The file {plugins_file_path} contains invalid JSON data.")
         return {}
-    
+
+
+def set_instructions(instructionsmodel):
+ 
+    messages.extend(read_instructions('for_all_intro'))
+    messages.extend(read_instructions(instructionsmodel))
+
+    # Call the get_instructions_for_plugins function and append each instruction to the messages list
+    plugins = load_plugins()
+    logger.debug(f"fetching instruction for :{plugins}")
+    plugin_instructions = get_instructions_for_plugins(plugins, instructionsmodel)
+    logger.debug(f"instructions :{plugin_instructions}")
+    #for instruction in plugin_instructions:
+    messages.extend(plugin_instructions)
+    messages.extend (read_instructions('for_all_outro'))
+    logger.debug(messages)
+    rawcontent = send_messages(messages)
+
 def main(args):
 
     global log_format
@@ -458,6 +485,7 @@ def main(args):
     chat_completion_args['model'] = args.model
     chat_completion_args['temperature'] = args.temperature
     chat_completion_args['stream'] = not args.disable_streaming
+    chat_completion_args['max_tokens'] = 100
 
     # if streaming make sure to go to line before logging.
 
@@ -475,26 +503,22 @@ def main(args):
     if "vicuna" in args.model and args.instruction_role != "user":
         warnings.warn("Using a Vicuna model and instruction role different than 'user' is not recommended.")
 
-    messages.extend(read_instructions('for_all_intro'))
-    messages.extend(read_instructions(chat_completion_args['model']))
+    if (args.model_instructions=="model"):
+        logger.info("Sending instructions to model")
+        set_instructions(args.model)
+    else:
+        logger.info(f"Sending instructions to model ({args.model_instructions})")
+        set_instructions(args.model_instructions)
 
-    # Call the get_instructions_for_plugins function and append each instruction to the messages list
-    plugins = load_plugins()
-    logger.debug(f"fetching instruction for :{plugins}")
-    plugin_instructions = get_instructions_for_plugins(plugins, args.model)
-    logger.debug(f"instructions :{plugin_instructions}")
-    #for instruction in plugin_instructions:
-    messages.extend(plugin_instructions)
-    messages.extend (read_instructions('for_all_outro'))
-    logger.debug(messages)
-    logger.info("Sending instructions to model")
-    rawcontent = send_messages(messages)
-    
-    start_dialog(args.prompt, not args.disable_spinner, args.cli)
+    start_dialog(args)
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Configure the AI model and API settings.")
     parser.add_argument("--model", default="gpt-3.5-turbo-0301", help="Specify the model to use.")
+    parser.add_argument("--model-instructions", default="model", help="Specify the model instructions to use.")
+    parser.add_argument("--disable-plugin-invocation", action="store_true", default=False, help="Disable plugin invocation.")
+
     parser.add_argument("--disable-streaming", action="store_true", default=False, help="Disable streaming mode.")
     parser.add_argument("--instruction-role", default="system", choices=["system", "user"], help="Specify the instruction role.")
     parser.add_argument("--temperature", type=float, default=0.7, help="Specify the temperature.")
