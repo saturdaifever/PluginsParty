@@ -7,7 +7,7 @@
 * Use plugins made for ChatGPT with other LLMs 🌐
 
 
-*Don't get too excited! Available plugins are limited, but this will help change that! And what a catchy introduction! 🎶
+*Don't get too excited! Available plugins are limited, but it wont last! And what a catchy intro! 🎶
 
 ## The Goal
 
