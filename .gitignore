@@ -10,3 +10,4 @@ plugins/*
 !plugins/default_plugins.json
 recordings
 src/tests
+pytest.ini
