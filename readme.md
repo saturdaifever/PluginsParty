@@ -33,7 +33,8 @@ This project was created to be a **multi-LLM plugin playground** and may also be
 
 - Interactive command-line interface for LLM conversations
 - Markdown rendering for rich text responses
-- Support for standard ChatGPT plugins
+- support model-specific instructions and plugins-handling instructions
+- Support for standard ChatGPT compatible plugins
 - Support for multiple target language models (Vicuna, StableVicuna, GPT-3.5, GPT-4, etc.)
 - Ability to execute code blocks provided by the assistant
 - Support for streaming mode with the OpenAI API (where applicable)
@@ -141,7 +142,7 @@ See [instruction/readme.md](instructions/readme.md) for details.
 - [ ] Implement unit tests and automated testing for plugins
 - [ ] Keep watching for Vicuna Openchat API server streaming support
 - [ ] Clean up/simplify plugins OpenAPI YAML to remove unnecessary information/details (would save tokens and allow LLM to focus better)
-- [ ] Allow for model-specific generic plugins-handling instructions
+- [x] Allow for model-specific generic plugins-handling instructions
 
 ## Vicuna / StableVicuna
 
