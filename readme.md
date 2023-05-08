@@ -1,13 +1,13 @@
 # 🎉 PluginsParty 🎈
 
 ## Bringing ChatGPT Plugins to All (LLMs and Humans)
-##Join the Party! Now you can:
+## Join the Party! Now you can:
 
 * Enjoy ChatGPT with plugins today - no waitlist!*
 * Use plugins made for ChatGPT with other LLMs 🌐
 
 
-*Don't get too excited! Available plugins are limited, but it wont last! And what a catchy intro! 🎶
+*Don't get too excited! Available plugins are limited, but it wont last and what a catchy intro! 🎶
 
 ## The Goal
 
@@ -22,7 +22,7 @@ As of today, all models are accessed via the OpenAI client Python API.
 This project was created to be a **multi-LLM plugin playground** and may also be valuable for **plugin testing automation**.
 
 ## Vicuna 13b - running locally on a 24GB GPU 
-![](assets/vicuna13b-ex1.gif)
+![](assets/vicuna13b.gif)
 
 ## GPT4 plugin enabled
 ![](assets/gpt4-ex1.gif)
