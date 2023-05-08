@@ -7,6 +7,5 @@ You can customize models instruction by defining <modelname>.txt files in the in
 
 * for_all_intro.txt
 * <plugin name>.txt or default.txt
-* plugins registration loop (not model specific): 
-    * instructions defined(hard coded) in register_plugin.py customized with plugin info - could eventually be templated
+* <plugin named>_plugin.txt or generic_plugin.txt (template beware of properly escaping variable and curly brackets)
 * for_all_outro.txt
