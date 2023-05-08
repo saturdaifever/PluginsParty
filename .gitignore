@@ -1,0 +1,12 @@
+.DS_Store
+__pycache__
+*.secret
+bulkdocuments
+.conda
+recordings
+plugins/*
+.pytest_cache
+
+!plugins/default_plugins.json
+recordings
+src/tests
