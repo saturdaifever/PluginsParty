@@ -36,7 +36,7 @@ from register_plugin import get_plugins_stubs, register_plugin
 
 LOGGER = logging.getLogger("pluginspartyLOGGER")
 
-def initialize_LOGGER(log_level):
+def initialize_logger(log_level):
     """
     Initialize a LOGGER with the given log level.
 
@@ -180,9 +180,9 @@ def extract_command(message):
                 error_msg = f"Error: Invalid command format: The 'args' is not a valid JSON object. namespace: {namespace}, operation_id: {operation_id}, parameters: {params}."
                 raise InvalidCommandFormatError(error_msg) from anexception
             return (namespace, operation_id), params
-        else:
-            error_msg = "Error: Invalid command format: The command is not well formed. Expected a JSON object as the parameter."
-            raise InvalidCommandFormatError(error_msg)
+        
+        error_msg = "Error: Invalid command format: The command is not well formed. Expected a JSON object as the parameter."
+        raise InvalidCommandFormatError(error_msg)
     return None, None
 
 
@@ -482,7 +482,6 @@ def find_last_code_block(messages):
 
     return None
 
-
 def get_user_input(prompt):
     """
     Gets user input from the console with shell-like line editing capabilities.
@@ -747,7 +746,7 @@ def main(args):
     logging.basicConfig(level=numeric_log_level, format=LOG_FORMAT)
 
     # Update the global variable chat_completion_args with command-line parameters
-    global CHAT_COMPLETION_ARGS
+    CHAT_COMPLETION_ARGS
     CHAT_COMPLETION_ARGS["model"] = args.model
     CHAT_COMPLETION_ARGS["temperature"] = args.temperature
     CHAT_COMPLETION_ARGS["stream"] = not args.disable_streaming
