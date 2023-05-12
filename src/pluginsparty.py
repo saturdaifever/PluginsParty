@@ -11,7 +11,10 @@
 
 #!/usr/bin/env python3
 
+#from fastchat.client import openai_api_client
+
 import openai
+
 from rich import print as rich_print
 from rich.markdown import Markdown
 from rich.console import Console
@@ -216,6 +219,7 @@ def send_messages(messages, spin=False):
     chat_completion_args['messages']=messages
     if (spin and not chat_completion_args['stream']): spinner.start()
     response = openai.ChatCompletion.create(**chat_completion_args)
+    
     if (spin and not chat_completion_args['stream']): spinner.stop()
 
     buffer = ""
@@ -381,7 +385,7 @@ def start_dialog(args):
                     # Add the output message to the messages list with role INSTRUCTIONROLE
                     messages.append({"role": "user", "content": f"<RESPONSE FROM shell> {output_message} </RESPONSE> Interprete the results or silently correct the command if you get an error."})
                     print (output_message)
-                    send_messages(messages, spîpin)
+                    send_messages(messages, spin)
 
                     # Send the message using send_messages function
                     rawcontent = send_messages(messages, spin)               
@@ -471,6 +475,7 @@ def main(args):
     # Update the OpenAI API base if a value is provided
     if args.openai_api_base:
         openai.api_base = args.openai_api_base
+        #openai_api_client.set_baseurl(args.openai_api_base)
 
     if args.log_level.upper() == "SILENT":
         numeric_log_level = logging.CRITICAL + 1
