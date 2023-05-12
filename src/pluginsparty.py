@@ -192,7 +192,7 @@ class InvalidCommandFormatError(Exception):
 
     Attributes:
         message (str): Explanation of the error.
-    """ 
+    """
     def __init__(self, message):
         super().__init__(message)
 
@@ -401,8 +401,8 @@ def send_messages(messages, spin=False):
         print(buffer, end="")
 
     if markdown_buffer:
-        md = Markdown(markdown_buffer)
-        console.print(md, end="")
+        mymd = Markdown(markdown_buffer)
+        console.print(mymd, end="")
     return rawcontent
 
 
@@ -510,7 +510,6 @@ def get_user_input(prompt):
         print(f"\nAn error occurred: {anexception}")
         return None
 
-
 def start_dialog(args):
     """
     Start a dialog based on the provided command line arguments.
@@ -523,7 +522,7 @@ def start_dialog(args):
 
     Returns:
         None
-    """ 
+    """
     cli_mode = args.cli
     print_raw_plugins_output = args.print_raw_plugins_output
     spin = not args.disable_spinner
@@ -698,7 +697,7 @@ def set_instructions(instructionsmodel):
     Returns:
         str: The raw content of the sent MESSAGES.
     """
- 
+
     MESSAGES.extend(read_instructions("for_all_intro"))
     MESSAGES.extend(read_instructions(instructionsmodel))
 
@@ -730,7 +729,7 @@ def main(args):
         The function warns the user if a Vicuna model is used with streaming enabled or if 
         an instruction role different than 'user' is used with a Vicuna model.
     """
-      
+
     global LOG_FORMAT
     global INSTRUCTION_ROLE
 
