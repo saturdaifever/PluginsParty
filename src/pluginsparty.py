@@ -353,8 +353,7 @@ def start_dialog(args):
             if len(parts) == 2:
                 # Extract the URL and invoke the register_plugin function
                 url = parts[1]
-                
-                messages.append(get_instructions_for_plugin(url))
+                messages.append(get_instructions_for_plugin(url, args.model))
             else:
                 print("Invalid input. Usage: /register <url>")
             continue
