@@ -725,7 +725,7 @@ def main(args):
         args (argparse.Namespace): Parsed command-line arguments.
 
     Warnings:
-        The function warns the user if a Vicuna model is used with streaming enabled or if 
+        The function warns the user if  
         an instruction role different than 'user' is used with a Vicuna model.
     """
 
@@ -750,7 +750,7 @@ def main(args):
     CHAT_COMPLETION_ARGS["model"] = args.model
     CHAT_COMPLETION_ARGS["temperature"] = args.temperature
     CHAT_COMPLETION_ARGS["stream"] = not args.disable_streaming
-    CHAT_COMPLETION_ARGS["max_tokens"] = 100
+    CHAT_COMPLETION_ARGS["max_tokens"] = 500
 
     # if streaming make sure to go to line before logging.
 
@@ -760,10 +760,6 @@ def main(args):
     INSTRUCTION_ROLE = args.instruction_role
 
     # Don't set streaming to false or api will fail if not supported...
-
-    # Display warnings based on the conditions
-    if "vicuna" in args.model and not args.disable_streaming:
-        warnings.warn("Using a Vicuna model with streaming enabled is not recommended.")
 
     if "vicuna" in args.model and args.instruction_role != "user":
         warnings.warn(
@@ -778,8 +774,7 @@ def main(args):
         set_instructions(args.model_instructions)
 
     start_dialog(args)
-
-
+    
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Configure the AI model and API settings."
