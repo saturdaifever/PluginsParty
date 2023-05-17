@@ -1,5 +1,5 @@
 # 🎉 PluginsParty 🎈
-
+# DEV Branch
 ## Bringing ChatGPT Plugins to All (LLMs and Humans)
 ## Join the Party! Now you can:
 
@@ -87,7 +87,7 @@ Once registered, the model will (eventually) invoke the plugin when needed.
 You can customize the behavior of the program using command-line arguments:
 
 - `--model`: Specify the language model to use (e.g., `gpt-3.5-turbo-0301`, `gpt-4`, `vicuna`, `stablevicuna-13b`). Defaults to `gpt-3.5-turbo-0301`.
-- `--disable-streaming`: Disable streaming mode for the OpenAI API (required for FastChat [Vicuna/StableVicuna]).
+- `--disable-streaming`: Disable streaming mode for the OpenAI API
 - `--instruction-role`: Specify the instruction role (`system` or `user`). Defaults to `system`.
 - `--temperature`: Specify the temperature for the language model. Defaults to `0.7`.
 - `--disable-spinner`: Disable spinner.
@@ -140,7 +140,7 @@ See [instruction/readme.md](instructions/readme.md) for details.
 - [ ] List of working plugins with associated known-to-work prompts
 - [ ] Improve documentation
 - [ ] Implement unit tests and automated testing for plugins
-- [ ] Keep watching for Vicuna Openchat API server streaming support
+- [x] Keep watching for Vicuna Openchat API server streaming support
 - [ ] Clean up/simplify plugins OpenAPI YAML to remove unnecessary information/details (would save tokens and allow LLM to focus better)
 - [x] Allow for model-specific generic plugins-handling instructions
 
