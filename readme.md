@@ -1,5 +1,9 @@
 # 🎉 PluginsParty 🎈
 ## Bringing ChatGPT Plugins to All (LLMs and Humans)
+
+
+# This is three years old and totally deprecated. I keep it here for the archives and to remember the fun
+
 ## Join the Party! Now you can:
 
 * Use plugins made for ChatGPT with other LLMs 🌐
